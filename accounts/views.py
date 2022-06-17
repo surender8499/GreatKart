@@ -10,7 +10,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
-from django.http import HttpResponse
+from django.conf import settings
+
 
 from carts.views import _cart_id
 from carts.models import Cart, CartItem
@@ -125,7 +126,7 @@ def activate(request, uidb64, token):
         user = None
 
     if user is not None and default_token_generator.check_token(user, token):
-        user.is_active = true
+        user.is_active = True
         user.save()
         messages.success(request, 'Congratulations! Your account is activated.')
         return redirect('login')
@@ -133,7 +134,7 @@ def activate(request, uidb64, token):
         messages.error(request, 'Invalid activation link')
         return redirect('register')
 
-@login_required(login_url= 'login')
+@login_required(login_url = 'login')
 def dashboard(request):
     return render(request, 'accounts/dashboard.html')
 
@@ -158,7 +159,7 @@ def forgotPassword(request):
             messages.success(request, 'Password reset email has been sent to your email address.')
             return redirect('login')
         else:
-            messages.error(request, 'Account does not exist')
+            messages.error(request, 'Account does not exist!')
             return redirect('forgotPassword')
     return render(request, 'accounts/forgotPassword.html')
 
@@ -174,7 +175,7 @@ def resetpassword_validate(request, uidb64, token):
         messages.success(request, 'Please reset your password')
         return redirect('resetpassword')
     else:
-        mesages.error(request, 'This link has been expired')
+        mesages.error(request, 'This link has been expired!')
         return redirect('login')
 
 def resetPassword(request):
@@ -190,7 +191,7 @@ def resetPassword(request):
             messages.success(request, 'Password reset successful')
             return redirect('login')
         else:
-            messages.error(request, 'Password do not match')
+            messages.error(request, 'Password do not match!')
             return redirect('resetPassword')
     else:
         return render(request, 'accounts/resetPassword.html')
